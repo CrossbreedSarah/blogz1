@@ -3,12 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHemy_DATABASE_URI']= 'mysql+pymysql://build-a-blog:sarah@localhost:8889/build-a-blog'
+app.config['SQLALCHEMY_DATABASE_URI']= 'mysql+pymysql://build-a-blog:sarah@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 
 class Blog(db.Model):
-    id = db.Column(db.Integer,primary_key = True)
+    id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(200))
     body = db.Column(db.String(1000))
 
@@ -26,9 +26,9 @@ def index():
         return render_template('entry.html', blog=blog)
 
     else:
-        blog = Blog.query.all()
+        blogs = Blog.query.all()
 
-        return render_template('blog.html')
+        return render_template('blog.html', blogs=blogs)
 
 @app.route('/new_post', methods=['GET', 'POST'])
 def add_entry():
