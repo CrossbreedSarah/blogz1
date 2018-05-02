@@ -11,14 +11,29 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(200))
     body = db.Column(db.String(1000))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, title, body):
         self.title = title
         self.body = body
+        self.owner = owner
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(200), unique=True)
+    password = db.Column(db.String(200))
+    blogs = db.relationship('Blog', backref='owner')
+
+    def __init__(self, email, password):
+        self.username = username
+        self.password = password
+
 
 @app.route('/blog', methods = ['GET'])
 def index():
-
+    owner = User.query.filter_by(username=session['username']).first()
+        
     if request.args:
         blog_id = request.args.get("id")
         blog = Blog.query.get(blog_id)
@@ -32,14 +47,22 @@ def index():
 
 @app.route('/new_post', methods=['GET', 'POST'])
 def add_entry():
+
+    username = User.query.filter_by(username=username).first()
+    
+
     if request.method == 'GET':
         return render_template('new_post.html')
 
     if request.method == 'POST':
         title = request.form['title']
         blog = request.form['body']
+        user_id = request.form['user_id']
         title_error = ""
         body_error = ""
+        user_id = ""
+
+        if len(user_id)
 
         if len(title)< 3:
             title_error = "You need a longer title"
@@ -55,7 +78,12 @@ def add_entry():
             return redirect(query_url)
 
         else:
-            return render_template('new_post.html', title_error=title_error, body_error=body_error)
+            return render_template('new_post.html', 
+            title_error=title_error, body_error=body_error)
+
+@app.route('/login', ['GET'])
+def login():
+
 
 if __name__ == '__main__':
     app.run()
