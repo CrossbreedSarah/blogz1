@@ -41,10 +41,10 @@ def add_entry():
         title_error = ""
         body_error = ""
 
-        if len(title)< 1:
+        if len(title)< 3:
             title_error = "You need a longer title"
 
-        if len(blog)<1:
+        if len(blog)<3:
             body_error = "You need to write a longer post"
 
         if not title_error and not body_error:
