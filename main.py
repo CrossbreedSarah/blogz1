@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -6,6 +6,7 @@ app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI']= 'mysql+pymysql://build-a-blog:sarah@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
+app.secret_key = 'kj4nkj45kjn6jn89'
 
 class Blog(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -32,7 +33,24 @@ class User(db.Model):
 @app.before_request
 def require_login():
     allowed_routes = ['login', 'register']
+    if request.endpoint not in allowed_routes and 'username' not in session:
     return redirect('/login')
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        verify = request.form['verify']
+        if user and user.password == password:
+            session['username'] = username
+            flash("Logged In")
+            return redirect('/blog')
+        else:
+            flash('User password incorrect, or user does not exist', 'error')
+    return render template('login.html')
+
 
 @app.route('/new_post', methods=['GET', 'POST'])
 def add_entry():
@@ -68,39 +86,36 @@ def add_entry():
             return render_template('new_post.html', 
             title_error=title_error, body_error=body_error)
 
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        verify = request.form['verify']
-
-        username = ""
-        password = ""
-        verify = ""
-
-        if len(username) < 3 or len(username) > 20 or " " in username:
-            username_error = 'Not a valid username'
-
-        if len(password) < 3 or len(password) > 20 or " " in password:
-            pwd_error = 'Please enter a password between 3 and 20 characters.'
-
-        if verify is "":
-            pwdval_error = "Enter a valid password."
-    
-        elif verify != password:
-            pwdval_error = 'Passwords do not match.'
-
-        if not username_error and not pwd_error and not pwdval_error:
-            return render_template('blog.html', username=username)
-        else:
-            return render_template('signup.html', username=username, username_error=username_error, pwd_error=pwd_error, 
-            pwdval_error=pwdval_error)
 
         
 @app.route('/signup', methods = ['POST', 'GET'])
 def signup():
+    if request.method = 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        verify = request.form['verify']
+        username = ""
+        password = ""
+        verify = ""
+
+    if len(username) < 3 or len(username) > 20 or " " in username:
+       username_error = 'Not a valid username'
+
+
+    if len(password) <3 or len(password) >20 or " " in password:
+        pwd_error = 'Please enter a password between 3 and 20 characters.'
+
+    if validatepassword is "":
+        pwdval_error = "Enter a valid password."
+    
+    elif validatepassword != password:
+        pwdval_error = 'Passwords do not match.'
+
+    if not username_error and not pwd_error and not pwdval_error:
+        return render_template('blog.html', username=username)
+    else:
+        return render_template('base.html', username=username, username_error=username_error, pwd_error=pwd_error, 
+        pwdval_error=pwdval_error)
 
     existing_user = User.querry.filter_by(username=username).first()
     
@@ -109,13 +124,13 @@ def signup():
         db.session.add(new_user)
         db.session.commit()
         session['username'] = username
-        return redirect('/')
+        return redirect('/blog')
 
     else:
         
-        # user better response message
+        return <h1>Duplicate User</h1>    # user better response message
 
-        return render_template('login.html')
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():
