@@ -29,21 +29,10 @@ class User(db.Model):
         self.username = username
         self.password = password
 
-
-@app.route('/blog', methods = ['GET'])
-def index():
-    owner = User.query.filter_by(username=session['username']).first()
-        
-    if request.args:
-        blog_id = request.args.get("id")
-        blog = Blog.query.get(blog_id)
-
-        return render_template('entry.html', blog=blog)
-
-    else:
-        blogs = Blog.query.all()
-
-        return render_template('blog.html', blogs=blogs)
+@app.before_request
+def require_login():
+    allowed_routes = ['login', 'register']
+    return redirect('/login')
 
 @app.route('/new_post', methods=['GET', 'POST'])
 def add_entry():
@@ -60,9 +49,7 @@ def add_entry():
         user_id = request.form['user_id']
         title_error = ""
         body_error = ""
-        user_id = ""
-
-        if len(user_id)
+        user_error = ""
 
         if len(title)< 3:
             title_error = "You need a longer title"
@@ -81,8 +68,76 @@ def add_entry():
             return render_template('new_post.html', 
             title_error=title_error, body_error=body_error)
 
-@app.route('/login', ['GET'])
+@app.route('/login', methods=['POST', 'GET'])
 def login():
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        verify = request.form['verify']
+
+        username = ""
+        password = ""
+        verify = ""
+
+        if len(username) < 3 or len(username) > 20 or " " in username:
+            username_error = 'Not a valid username'
+
+        if len(password) < 3 or len(password) > 20 or " " in password:
+            pwd_error = 'Please enter a password between 3 and 20 characters.'
+
+        if verify is "":
+            pwdval_error = "Enter a valid password."
+    
+        elif verify != password:
+            pwdval_error = 'Passwords do not match.'
+
+        if not username_error and not pwd_error and not pwdval_error:
+            return render_template('blog.html', username=username)
+        else:
+            return render_template('signup.html', username=username, username_error=username_error, pwd_error=pwd_error, 
+            pwdval_error=pwdval_error)
+
+        
+@app.route('/signup', methods = ['POST', 'GET'])
+def signup():
+
+    existing_user = User.querry.filter_by(username=username).first()
+    
+    if not existing_user:
+        new_user = User(username, password)
+        db.session.add(new_user)
+        db.session.commit()
+        session['username'] = username
+        return redirect('/')
+
+    else:
+        
+        # user better response message
+
+        return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    del session['username']
+    return redirect('/login.html')
+
+@app.route('/blog', methods = ['GET'])
+def index():
+    owner = User.query.filter_by(username=session['username']).first()
+        
+    if request.args:
+        blog_id = request.args.get("id")
+        blog = Blog.query.get(blog_id)
+        db.session.add(blog)
+        db.session.commit()
+
+        return render_template('entry.html', blog=blog)
+
+    else:
+        blogs = Blog.query.all()
+
+        return render_template('blog.html', blogs=blogs)
 
 
 if __name__ == '__main__':

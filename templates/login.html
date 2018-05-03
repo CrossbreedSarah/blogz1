@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+<form action="/login" method="post">
+    <label for="username">Username</label>            
+        <input name="username" type="text" value="{{ username }}">
+        <span class="error">{{ username_error }}</span>
+
+    <label for="password">Password</label>       
+        <input name="password" type="password" value="{{ password }}">
+        <span class="error">{{ pwd_error }}</span>
+
+    <label for="verify">verify password</label>            
+        <input name="verify" type="password" value="{{ verify }}">
+        <span class="error">{{ pwdval_error }}</span>
+        
+<input type="submit">
+
+{% endblock %}

@@ -5,8 +5,16 @@
         <h1><a href="/blog">Build a Blog</a></h1>
         <a href="/new_post" >New Post</a>
         
+        <style>
+            .error {
+                color: red;
+            }
+        </style> 
     </head>
     <body>
+        <div>
+            <a href="/logout">log out</a>
+        </div>
         
         {% block content %}
         {% endblock %}
