@@ -1,23 +1,25 @@
 <!doctype html>
 <html>
-    <head>
-            
-        <h1><a href="/blog">Build a Blog</a></h1>
-        <a href="/new_post" >New Post</a>
+<head>
+    <title>Blogz</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style> 
+</head>
+<body>
+        <table>
+            <td><a href="/signup">CReate Account</a></td>
+            <td><a href="/login">Login</a></td>
+            <td><a href="/blog">Main Blog Page</a></td>
+            <td><a href="/new_post">Add a Blog Entry</a></td>
+            <td><a href="/">All Authors</a></td>
+            <td><a href="/single_user">Author Home Page</a></td>
+            <td><a href="/logout">Logout</a></td>
+        </table>
         
-        <style>
-            .error {
-                color: red;
-            }
-        </style> 
-    </head>
-    <body>
-        <div>
-            <a href="/logout">log out</a>
-        </div>
-        
-        {% block content %}
-        {% endblock %}
-
     </body>
 </html>
+{% block content %}
+{% endblock %}

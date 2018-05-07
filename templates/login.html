@@ -1,18 +1,23 @@
 {% extends "base.html" %}
-
-<form action="/login" method="post">
-    <label for="username">Username</label>            
-        <input name="username" type="text" value="{{ username }}">
-        <span class="error">{{ username_error }}</span>
-
-    <label for="password">Password</label>       
-        <input name="password" type="password" value="{{ password }}">
-        <span class="error">{{ pwd_error }}</span>
-
-    <label for="verify">verify password</label>            
-        <input name="verify" type="password" value="{{ verify }}">
-        <span class="error">{{ pwdval_error }}</span>
-        
-<input type="submit">
-
+{% block content%}
+    <h1>Login</h1>
+    <form action="/login" method="post">
+    <table>
+        <tr>
+            <td><label for="username">Username</label></td>
+            <td><input name="username" type="text" value="{{username}}">
+                <span class="error">{{username_error}}</span></td>
+            </tr>
+        <tr>
+            <td><label for="password">Password</label></td>
+            <td><input name="password" type="password">
+            <span class="error">{{password_error}}</span>
+            </td>
+        </tr>
+    </table>  
+    <input type="submit">
+    </form>
+    <p>Please <a href="/signup">create an account</a> if you are a new user.</p>
 {% endblock %}
+
+
