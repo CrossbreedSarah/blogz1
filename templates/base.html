@@ -1,25 +1,33 @@
 <!doctype html>
 <html>
-<head>
-    <title>Blogz</title>
-    <style>
-        .error {
-            color: red;
-        }
-    </style> 
-</head>
+    <head>
+        <style>
+            .error { color: red; }
+            h1 {text-align:center;}
+            textarea{
+                margin: 0;
+                width: 240px;
+                height: 120px;
+            }
+        </style>
+        <title>{{page_title}}</title>
+    </head>
+    <header>
+        <nav>
+            
+            <a href="/blog">Home</a>
+            <a href="/login">Login</a>
+            <a href="/newpost">Add a New Entry</a>
+            <a href="/signup">Signup</a>
+            <a href="/logout">Log out</a>
+        </nav>
+    </header>
+
 <body>
-        <table>
-            <td><a href="/signup">CReate Account</a></td>
-            <td><a href="/login">Login</a></td>
-            <td><a href="/blog">Main Blog Page</a></td>
-            <td><a href="/new_post">Add a Blog Entry</a></td>
-            <td><a href="/">All Authors</a></td>
-            <td><a href="/single_user">Author Home Page</a></td>
-            <td><a href="/logout">Logout</a></td>
-        </table>
-        
-    </body>
+    <hr />
+    <h1>{{page_header}}</h1>
+    {% block content %}
+    {% endblock %}
+
+</body>
 </html>
-{% block content %}
-{% endblock %}
